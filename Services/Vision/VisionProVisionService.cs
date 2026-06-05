@@ -88,16 +88,6 @@ namespace TeslaNE42Vision2D.Services.Vision
 
                     return inspectionOutput;
 
-                    // 读取输出结果 — 端子名称需根据实际 .vpp 文件调整
-                    //bool ok = true;
-                    //try { ok = (bool)_toolBlock.Outputs["OkNg"].Value; } catch { }
-                    //try { pixelX = (double)_toolBlock.Outputs["PixelX"].Value; } catch { }
-                    //try { pixelY = (double)_toolBlock.Outputs["PixelY"].Value; } catch { }
-                    //try { angle = (double)_toolBlock.Outputs["Angle"].Value; } catch { }
-                    //try { barcode = (string)_toolBlock.Outputs["Barcode"].Value; } catch { }
-                    //try { polarity = (string)_toolBlock.Outputs["Polarity"].Value; } catch { }
-
-                    //return ok;
                 }
                 catch (Exception ex)
                 {
@@ -110,6 +100,7 @@ namespace TeslaNE42Vision2D.Services.Vision
 
     public class SnapAndInspectionInput
     {
+        public string TimeStamp { get; set; }
         public ICameraService CameraService { get; set; }
 
         public string CameraName { get; set; }
@@ -120,6 +111,7 @@ namespace TeslaNE42Vision2D.Services.Vision
 
     public class InspectionInput
     {
+
         public string Name { get; set; }
         public ICogImage ImagePolarity { get; set; }
         public ICogImage ImageBarcode { get; set; }

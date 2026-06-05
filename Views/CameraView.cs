@@ -24,6 +24,7 @@ namespace TeslaNE42Vision2D.Views
         {
             InitializeComponent();
             InitializeCogDisplay();
+            lblExposureInfo.Visible = false;
         }
 
         private void InitializeCogDisplay()
@@ -94,7 +95,7 @@ namespace TeslaNE42Vision2D.Views
                     return;
                 }
                 _cogDisplay.Image = image;
-                _cogDisplay.Fit(true);
+                _cogDisplay.Fit(false);
             }
         }
 
@@ -109,7 +110,8 @@ namespace TeslaNE42Vision2D.Views
                 }
                 _cogDisplay.Record = record;
                 _cogDisplay.MaintainImageRegion = true;
-                _cogDisplay.Fit(true);
+                //_cogDisplay.AutoFit = true;
+                _cogDisplay.Fit(false);
             }
         }
 

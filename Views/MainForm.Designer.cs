@@ -6,8 +6,6 @@ namespace TeslaNE42Vision2D.Views
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnSingleRun;
-        private System.Windows.Forms.Button btnCalibration;
-        private System.Windows.Forms.Button btnDebug;
         private System.Windows.Forms.Button btnConfig;
 
         private System.Windows.Forms.TableLayoutPanel displayPanel;
@@ -48,11 +46,10 @@ namespace TeslaNE42Vision2D.Views
             this.btnSingleRun = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
-            this.btnCalibration = new System.Windows.Forms.Button();
-            this.btnDebug = new System.Windows.Forms.Button();
             this.btnConfig = new System.Windows.Forms.Button();
             this.btnClearLog = new System.Windows.Forms.Button();
             this.btnCalcToolBLock = new System.Windows.Forms.Button();
+            this.comboBoxPosition = new System.Windows.Forms.ComboBox();
             this.displayPanel = new System.Windows.Forms.TableLayoutPanel();
             this.rightPanel = new System.Windows.Forms.Panel();
             this.resultGroup = new System.Windows.Forms.GroupBox();
@@ -67,7 +64,6 @@ namespace TeslaNE42Vision2D.Views
             this.lblPlcStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblHeartbeatStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblDiskStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.comboBoxPosition = new System.Windows.Forms.ComboBox();
             this.topPanel.SuspendLayout();
             this.rightPanel.SuspendLayout();
             this.resultGroup.SuspendLayout();
@@ -81,8 +77,6 @@ namespace TeslaNE42Vision2D.Views
             this.topPanel.Controls.Add(this.btnSingleRun);
             this.topPanel.Controls.Add(this.btnStop);
             this.topPanel.Controls.Add(this.btnReset);
-            this.topPanel.Controls.Add(this.btnCalibration);
-            this.topPanel.Controls.Add(this.btnDebug);
             this.topPanel.Controls.Add(this.btnConfig);
             this.topPanel.Controls.Add(this.btnClearLog);
             this.topPanel.Controls.Add(this.btnCalcToolBLock);
@@ -139,43 +133,13 @@ namespace TeslaNE42Vision2D.Views
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
             // 
-            // btnCalibration
-            // 
-            this.btnCalibration.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(120)))));
-            this.btnCalibration.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCalibration.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold);
-            this.btnCalibration.ForeColor = System.Drawing.Color.White;
-            this.btnCalibration.Location = new System.Drawing.Point(366, 10);
-            this.btnCalibration.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.btnCalibration.Name = "btnCalibration";
-            this.btnCalibration.Size = new System.Drawing.Size(110, 34);
-            this.btnCalibration.TabIndex = 6;
-            this.btnCalibration.Text = "九点标定";
-            this.btnCalibration.UseVisualStyleBackColor = false;
-            this.btnCalibration.Click += new System.EventHandler(this.BtnCalibration_Click);
-            // 
-            // btnDebug
-            // 
-            this.btnDebug.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(120)))));
-            this.btnDebug.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDebug.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold);
-            this.btnDebug.ForeColor = System.Drawing.Color.White;
-            this.btnDebug.Location = new System.Drawing.Point(484, 10);
-            this.btnDebug.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.btnDebug.Name = "btnDebug";
-            this.btnDebug.Size = new System.Drawing.Size(110, 34);
-            this.btnDebug.TabIndex = 7;
-            this.btnDebug.Text = "调试工具";
-            this.btnDebug.UseVisualStyleBackColor = false;
-            this.btnDebug.Click += new System.EventHandler(this.BtnDebug_Click);
-            // 
             // btnConfig
             // 
             this.btnConfig.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(120)))));
             this.btnConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConfig.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold);
             this.btnConfig.ForeColor = System.Drawing.Color.White;
-            this.btnConfig.Location = new System.Drawing.Point(602, 10);
+            this.btnConfig.Location = new System.Drawing.Point(366, 10);
             this.btnConfig.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(110, 34);
@@ -190,7 +154,7 @@ namespace TeslaNE42Vision2D.Views
             this.btnClearLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearLog.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold);
             this.btnClearLog.ForeColor = System.Drawing.Color.White;
-            this.btnClearLog.Location = new System.Drawing.Point(720, 10);
+            this.btnClearLog.Location = new System.Drawing.Point(484, 10);
             this.btnClearLog.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.btnClearLog.Name = "btnClearLog";
             this.btnClearLog.Size = new System.Drawing.Size(80, 34);
@@ -205,7 +169,7 @@ namespace TeslaNE42Vision2D.Views
             this.btnCalcToolBLock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalcToolBLock.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold);
             this.btnCalcToolBLock.ForeColor = System.Drawing.Color.White;
-            this.btnCalcToolBLock.Location = new System.Drawing.Point(808, 10);
+            this.btnCalcToolBLock.Location = new System.Drawing.Point(572, 10);
             this.btnCalcToolBLock.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.btnCalcToolBLock.Name = "btnCalcToolBLock";
             this.btnCalcToolBLock.Size = new System.Drawing.Size(110, 34);
@@ -214,13 +178,22 @@ namespace TeslaNE42Vision2D.Views
             this.btnCalcToolBLock.UseVisualStyleBackColor = false;
             this.btnCalcToolBLock.Click += new System.EventHandler(this.btnCalcToolBLock_Click);
             // 
+            // comboBoxPosition
+            // 
+            this.comboBoxPosition.FormattingEnabled = true;
+            this.comboBoxPosition.Location = new System.Drawing.Point(689, 13);
+            this.comboBoxPosition.Name = "comboBoxPosition";
+            this.comboBoxPosition.Size = new System.Drawing.Size(104, 25);
+            this.comboBoxPosition.TabIndex = 11;
+            this.comboBoxPosition.SelectedIndexChanged += new System.EventHandler(this.comboBoxPosition_SelectedIndexChanged);
+            // 
             // displayPanel
             // 
             this.displayPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.displayPanel.BackColor = System.Drawing.Color.Black;
             this.displayPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.displayPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 840F));
+            this.displayPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 841F));
             this.displayPanel.Location = new System.Drawing.Point(0, 55);
             this.displayPanel.Name = "displayPanel";
             this.displayPanel.Size = new System.Drawing.Size(840, 723);
@@ -325,46 +298,37 @@ namespace TeslaNE42Vision2D.Views
             this.lblPlcStatus,
             this.lblHeartbeatStatus,
             this.lblDiskStatus});
-            this.statusStrip.Location = new System.Drawing.Point(0, 774);
+            this.statusStrip.Location = new System.Drawing.Point(0, 776);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1280, 26);
+            this.statusStrip.Size = new System.Drawing.Size(1280, 24);
             this.statusStrip.TabIndex = 3;
             // 
             // lblStateStatus
             // 
             this.lblStateStatus.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.lblStateStatus.Name = "lblStateStatus";
-            this.lblStateStatus.Size = new System.Drawing.Size(79, 21);
+            this.lblStateStatus.Size = new System.Drawing.Size(78, 19);
             this.lblStateStatus.Text = "状态: 初始化";
             // 
             // lblPlcStatus
             // 
             this.lblPlcStatus.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.lblPlcStatus.Name = "lblPlcStatus";
-            this.lblPlcStatus.Size = new System.Drawing.Size(76, 21);
+            this.lblPlcStatus.Size = new System.Drawing.Size(75, 19);
             this.lblPlcStatus.Text = "PLC: 未连接";
             // 
             // lblHeartbeatStatus
             // 
             this.lblHeartbeatStatus.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.lblHeartbeatStatus.Name = "lblHeartbeatStatus";
-            this.lblHeartbeatStatus.Size = new System.Drawing.Size(78, 21);
+            this.lblHeartbeatStatus.Size = new System.Drawing.Size(74, 19);
             this.lblHeartbeatStatus.Text = "心跳: 0 正常";
             // 
             // lblDiskStatus
             // 
             this.lblDiskStatus.Name = "lblDiskStatus";
-            this.lblDiskStatus.Size = new System.Drawing.Size(49, 21);
+            this.lblDiskStatus.Size = new System.Drawing.Size(48, 19);
             this.lblDiskStatus.Text = "磁盘: --";
-            // 
-            // comboBoxPosition
-            // 
-            this.comboBoxPosition.FormattingEnabled = true;
-            this.comboBoxPosition.Location = new System.Drawing.Point(925, 13);
-            this.comboBoxPosition.Name = "comboBoxPosition";
-            this.comboBoxPosition.Size = new System.Drawing.Size(104, 25);
-            this.comboBoxPosition.TabIndex = 11;
-            this.comboBoxPosition.SelectedIndexChanged += new System.EventHandler(this.comboBoxPosition_SelectedIndexChanged);
             // 
             // MainForm
             // 
@@ -375,7 +339,7 @@ namespace TeslaNE42Vision2D.Views
             this.Controls.Add(this.rightPanel);
             this.Controls.Add(this.displayPanel);
             this.Controls.Add(this.topPanel);
-            this.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MinimumSize = new System.Drawing.Size(1000, 650);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

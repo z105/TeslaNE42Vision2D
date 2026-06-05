@@ -31,7 +31,7 @@ namespace TeslaNE42Vision2D.Services
         /// 心跳状态变化事件 - 通知界面更新心跳显示
         /// 参数：心跳接收计数、是否超时
         /// </summary>
-        public event Action<int, bool> OnHeartbeatStatusChanged;
+        public event Action<ulong, bool> OnHeartbeatStatusChanged;
 
         public ConfigService<AppConfig> AppConfigService { get; } = new ConfigService<AppConfig>("app");
         public ConfigService<CalibConfig> CalibConfigService { get; } = new ConfigService<CalibConfig>("calibration");
@@ -70,7 +70,7 @@ namespace TeslaNE42Vision2D.Services
 
         public Dictionary<string, IVisionService> VisionServices { get; set; }
 
-        public int TempPosition { get; set; }
+        public PositionType TempPosition { get; set; }
 
         public void ResetCounts()
         {

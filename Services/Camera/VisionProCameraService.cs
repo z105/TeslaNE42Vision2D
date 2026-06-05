@@ -19,6 +19,7 @@ namespace TeslaNE42Vision2D.Services.Camera
         private readonly object _snapLock = new object();
 
         private readonly ResiliencePipeline _retryPipeline;
+        private readonly ResiliencePipeline _initRetryPipeline;
         private const int MaxRetryCount = 99;
 
         public bool Status => _isInitialized && _acqFifo != null;
@@ -29,6 +30,7 @@ namespace TeslaNE42Vision2D.Services.Camera
             _cameraIndex = cameraIndex;
             Name = name;
             _retryPipeline = BuildRetryPipeline();
+            _initRetryPipeline = BuildInitRetryPipeline();
         }
 
         public VisionProCameraService(string serialNumber, string name = "Camera")
@@ -36,6 +38,7 @@ namespace TeslaNE42Vision2D.Services.Camera
             _serialNumber = serialNumber;
             Name = name;
             _retryPipeline = BuildRetryPipeline();
+            _initRetryPipeline = BuildInitRetryPipeline();
         }
 
         private ResiliencePipeline BuildRetryPipeline()
@@ -55,46 +58,60 @@ namespace TeslaNE42Vision2D.Services.Camera
                 .Build();
         }
 
+        private ResiliencePipeline BuildInitRetryPipeline()
+        {
+            return new ResiliencePipelineBuilder()
+                .AddRetry(new RetryStrategyOptions
+                {
+                    MaxRetryAttempts = 10,
+                    Delay = TimeSpan.FromMilliseconds(200),
+                    OnRetry = args =>
+                    {
+                        LogHelper.Warning($"{Name}: 连接相机失败，第 {args.AttemptNumber + 1}/{MaxRetryCount} 次重试，原因: {args.Outcome.Exception?.Message}");
+                        return default(ValueTask);
+                    },
+                    ShouldHandle = new PredicateBuilder().Handle<Exception>()
+                })
+                .Build();
+        }
+
         public void Initialize()
         {
             try
             {
-                CogFrameGrabbers grabbers = new CogFrameGrabbers();
-                if (grabbers.Count == 0)
+                _initRetryPipeline.Execute(() =>
                 {
-                    LogHelper.Warning($"{Name}: 未找到任何采集卡");
-                    return;
-                }
+                    CogFrameGrabbers grabbers = new CogFrameGrabbers();
+                    if (grabbers.Count == 0)
+                        throw new InvalidOperationException($"{Name}: 未找到任何采集卡");
 
-                if (!string.IsNullOrEmpty(_serialNumber))
-                {
-                    foreach (ICogFrameGrabber g in grabbers)
+                    if (!string.IsNullOrEmpty(_serialNumber))
                     {
-                        if (g.SerialNumber == _serialNumber)
+                        foreach (ICogFrameGrabber g in grabbers)
                         {
-                            _frameGrabber = g;
-                            break;
+                            if (g.SerialNumber == _serialNumber)
+                            {
+                                _frameGrabber = g;
+                                break;
+                            }
                         }
                     }
-                }
-                else if (_cameraIndex < grabbers.Count)
-                {
-                    _frameGrabber = grabbers[_cameraIndex];
-                }
+                    else if (_cameraIndex < grabbers.Count)
+                    {
+                        _frameGrabber = grabbers[_cameraIndex];
+                    }
 
-                if (_frameGrabber == null)
-                {
-                    LogHelper.Warning($"{Name}: 未找到指定相机");
-                    return;
-                }
+                    if (_frameGrabber == null)
+                        throw new InvalidOperationException($"{Name}: 未找到指定相机");
 
-                _acqFifo = _frameGrabber.CreateAcqFifo("Generic GigEVision (Mono)", CogAcqFifoPixelFormatConstants.Format8Grey, 0, true);
-                _isInitialized = true;
-                LogHelper.Info($"{Name}: 初始化成功");
+                    _acqFifo = _frameGrabber.CreateAcqFifo("Generic GigEVision (Mono)", CogAcqFifoPixelFormatConstants.Format8Grey, 0, true);
+                    _isInitialized = true;
+                    LogHelper.Info($"{Name}: 初始化成功");
+                });
             }
             catch (Exception ex)
             {
-                LogHelper.Error($"{Name}: 初始化失败", ex);
+                LogHelper.Error($"{Name}: 初始化失败，已重试 {MaxRetryCount} 次", ex);
             }
         }
 

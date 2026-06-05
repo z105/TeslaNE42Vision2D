@@ -253,8 +253,12 @@ namespace TeslaNE42Vision2D.SocketTCPClient
 
         public bool Send(byte[] sendBuffer)
         {
-            return SendAsync(sendBuffer).GetAwaiter().GetResult();
+            m_Socket.Send(sendBuffer);
+            return true;
+            //return SendAsync(sendBuffer).GetAwaiter().GetResult();
         }
+
+  
 
         public void Disconnect()
         {

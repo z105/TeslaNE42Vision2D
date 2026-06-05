@@ -271,7 +271,7 @@ namespace TeslaNE42Vision2D.Views
             });
         }
 
-        private void OnHeartbeatStatusChanged(int count, bool timeout)
+        private void OnHeartbeatStatusChanged(ulong count, bool timeout)
         {
             this.SafeInvoke(() =>
             {
@@ -319,8 +319,23 @@ namespace TeslaNE42Vision2D.Views
         {
             var sm = RunDataService.Instance.ClientDevice?.StateMachine;
             if (sm == null) return;
-            string[] strings = new string[] { "Pn" };
-            double[] doubles = new double[] { RunDataService.Instance.TempPosition };
+            string posStr = "";
+            if(RunDataService.Instance.TempPosition == PositionType.Left)
+            {
+                posStr = "10";
+            }
+            else if (RunDataService.Instance.TempPosition == PositionType.Right)
+            {
+                posStr = "01";
+            }
+            else
+            {
+                posStr = "11";
+            }
+            string[] strings = new string[10];
+            double[] doubles = new double[10];
+            strings[2] = posStr;
+            //double[] doubles = new double[] { RunDataService.Instance.TempPosition };
             bool ok = sm.TriggerSingleJob(strings, doubles);
             AppendLog(ok ? "已触发单步运行" : "当前状态无法触发单步运行");
         }
@@ -403,7 +418,7 @@ namespace TeslaNE42Vision2D.Views
         private void btnCalcToolBLock_Click(object sender, EventArgs e)
         {
             string path = RunDataService.Instance.AppConfigService.Config.CalcToolBlockPath;
-            var form = new ToolBlockEditForm(RunDataService.Instance.CalcToolBlock, path);
+            var form = new CalcToolBlockEditForm(RunDataService.Instance.CalcToolBlock, path);
             form.ShowDialog();
         }
 
@@ -412,15 +427,15 @@ namespace TeslaNE42Vision2D.Views
             string selectedValue = comboBoxPosition.SelectedItem.ToString();
             if(selectedValue == "left")
             {
-                RunDataService.Instance.TempPosition = (int)PositionType.Left;
+                RunDataService.Instance.TempPosition = PositionType.Left;
             }
             else if(selectedValue == "right")
             {
-                RunDataService.Instance.TempPosition = (int)PositionType.Right;
+                RunDataService.Instance.TempPosition = PositionType.Right;
             }
             else
             {
-                RunDataService.Instance.TempPosition = (int)PositionType.All;
+                RunDataService.Instance.TempPosition = PositionType.All;
             }
         }
     }

@@ -34,15 +34,15 @@ namespace TeslaNE42Vision2D.Services
         private bool _autoReconnect = true;
         private bool _isReconnecting = false;
 
-        private int _heartbeatReceiveCount = 0;
+        private ulong _heartbeatReceiveCount = 0;
         private bool _heartbeatTimeoutFlag = false;
 
         public event Action<string> OnLogEvent;
         public event Action<DetectResultEntity> OnDetectResultEvent;
         public event Action<bool> OnConnectionChanged;
-        public event Action<int, bool> OnHeartbeatStatusChanged;
+        public event Action<ulong, bool> OnHeartbeatStatusChanged;
 
-        public int HeartbeatReceiveCount => _heartbeatReceiveCount;
+        public ulong HeartbeatReceiveCount => _heartbeatReceiveCount;
         public bool HeartbeatTimeoutFlag => _heartbeatTimeoutFlag;
 
         public bool IsConnected => _tcpClient.IsConnected;
@@ -349,7 +349,7 @@ namespace TeslaNE42Vision2D.Services
         }
 
         // 发送视觉检测结果到PLC（带坐标）
-        public bool SendDetectResult(DetectResultEntity result)
+        public bool SendDetectResult(DetectResultEntity result, PositionType positionType = PositionType.All)
         {
             VisionJob job = new VisionJob
             {
@@ -370,20 +370,9 @@ namespace TeslaNE42Vision2D.Services
                 .ToList();
 
 
-            string[] strings = new string[24] ;
+            string[] strings = GetBarcodeList(positionType, barcodeList.ToArray());
             double[] doubles = new double[10];
-            long[] t_longs = new long[24];
-
-            for(int i = 0; i< barcodeList.Count; i++)
-            {
-                strings[i] = barcodeList[i];
-            }
-
-            for (int i = 0; i < polarityList.Count; i++)
-            {
-                t_longs[i] = polarityList[i];
-            }
-
+            long[] t_longs = GetPolarityList(positionType, polarityList.ToArray());
 
             doubles[0] = result.PhysicalX;
             doubles[1] = result.PhysicalY;
@@ -391,6 +380,85 @@ namespace TeslaNE42Vision2D.Services
             doubles[3] = result.OkNg ? 1 : 0;
 
             return WriteResults(job, strings, doubles, t_longs);
+        }
+
+        public bool SendError(string errorMessage)
+        {
+            VisionJob job = new VisionJob
+            {
+                Id = _jobId,
+                Assessment = VisionJob.AssessmentEnum.NC,
+                Status = VisionJob.StatusEnum.Failed,
+                StatusMessage = errorMessage,
+            };
+            return WriteResults(job, null, null, null);
+        }
+
+        public long[] GetPolarityList(PositionType positionType, long[] polarity)
+        {
+
+            long[] result = new long[24];
+
+            switch (positionType)
+            {
+                case PositionType.Left:
+                    // 填充前 12 位 (索引 0-11)
+                    // 取传入数组的前 12 个元素（如果不足 12 个则取全部），防止数组越界
+                    int leftLength = Math.Min(polarity.Length, 12);
+                    Array.Copy(polarity, 0, result, 12, leftLength);
+                    break;
+
+                case PositionType.Right:
+                    // 填充后 12 位 (索引 12-23)
+                    int rightLength = Math.Min(polarity.Length, 12);
+                    Array.Copy(polarity, 0, result, 0, rightLength);
+
+                    break;
+
+                case PositionType.All:
+                    // 填充所有 24 位 (索引 0-23)
+                    int allLength = Math.Min(polarity.Length, 24);
+                    Array.Copy(polarity, 0, result, 0, allLength);
+                    break;
+
+                default:
+                    break;
+            }
+
+            return result;
+        }
+
+        public string[] GetBarcodeList(PositionType positionType, string[] barcode)
+        {
+
+            string[] result = new string[24];
+
+            switch (positionType)
+            {
+                case PositionType.Left:
+                    // 填充前 12 位 (索引 0-11)
+                    // 取传入数组的前 12 个元素（如果不足 12 个则取全部），防止数组越界
+                    int leftLength = Math.Min(barcode.Length, 12);
+                    Array.Copy(barcode, 0, result, 12, leftLength);
+                    break;
+
+                case PositionType.Right:
+                    // 填充后 12 位 (索引 12-23)
+                    int rightLength = Math.Min(barcode.Length, 12);
+                    Array.Copy(barcode, 0, result, 0, rightLength);
+                    break;
+
+                case PositionType.All:
+                    // 填充所有 24 位 (索引 0-23)
+                    int allLength = Math.Min(barcode.Length, 24);
+                    Array.Copy(barcode, 0, result, 0, allLength);
+                    break;
+
+                default:
+                    break;
+            }
+
+            return result;
         }
 
         private void SendCommandResponse(string command, bool isSuccessful, string message)

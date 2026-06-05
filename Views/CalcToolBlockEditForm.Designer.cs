@@ -1,6 +1,6 @@
 ﻿namespace TeslaNE42Vision2D.Views
 {
-    partial class ToolBlockEditForm
+    partial class CalcToolBlockEditForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,17 +31,10 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnSave = new System.Windows.Forms.Button();
-            this.btnExecute = new System.Windows.Forms.Button();
-            this.btnSelectPolarityImage = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtPolarityImagePath = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.cogToolBlockEditV21 = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
             this.panelResult = new System.Windows.Forms.Panel();
             this.tabControlResult = new System.Windows.Forms.TabControl();
-            this.btnSelectBarcodeImage = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtBarcodeImagePath = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -60,71 +53,28 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1083, 478);
-            this.tableLayoutPanel1.TabIndex = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(857, 460);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.btnSelectBarcodeImage);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.txtBarcodeImagePath);
             this.panel1.Controls.Add(this.btnSave);
-            this.panel1.Controls.Add(this.btnExecute);
-            this.panel1.Controls.Add(this.btnSelectPolarityImage);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.txtPolarityImagePath);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 381);
+            this.panel1.Location = new System.Drawing.Point(3, 413);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1077, 94);
+            this.panel1.Size = new System.Drawing.Size(851, 44);
             this.panel1.TabIndex = 2;
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(821, 46);
+            this.btnSave.Location = new System.Drawing.Point(726, 14);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(81, 23);
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "保存";
             this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
-            // 
-            // btnExecute
-            // 
-            this.btnExecute.Location = new System.Drawing.Point(731, 46);
-            this.btnExecute.Name = "btnExecute";
-            this.btnExecute.Size = new System.Drawing.Size(84, 23);
-            this.btnExecute.TabIndex = 4;
-            this.btnExecute.Text = "执行";
-            this.btnExecute.UseVisualStyleBackColor = true;
-            this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
-            // 
-            // btnSelectPolarityImage
-            // 
-            this.btnSelectPolarityImage.Location = new System.Drawing.Point(497, 14);
-            this.btnSelectPolarityImage.Name = "btnSelectPolarityImage";
-            this.btnSelectPolarityImage.Size = new System.Drawing.Size(93, 23);
-            this.btnSelectPolarityImage.TabIndex = 3;
-            this.btnSelectPolarityImage.Text = "选择图像";
-            this.btnSelectPolarityImage.UseVisualStyleBackColor = true;
-            this.btnSelectPolarityImage.Click += new System.EventHandler(this.btnSelectImage_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 12);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "引导图像路径:";
-            // 
-            // txtPolarityImagePath
-            // 
-            this.txtPolarityImagePath.Location = new System.Drawing.Point(110, 14);
-            this.txtPolarityImagePath.Name = "txtPolarityImagePath";
-            this.txtPolarityImagePath.Size = new System.Drawing.Size(381, 21);
-            this.txtPolarityImagePath.TabIndex = 1;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -138,7 +88,7 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1077, 372);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(851, 404);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // cogToolBlockEditV21
@@ -150,7 +100,7 @@
             this.cogToolBlockEditV21.MinimumSize = new System.Drawing.Size(489, 0);
             this.cogToolBlockEditV21.Name = "cogToolBlockEditV21";
             this.cogToolBlockEditV21.ShowNodeToolTips = true;
-            this.cogToolBlockEditV21.Size = new System.Drawing.Size(1071, 366);
+            this.cogToolBlockEditV21.Size = new System.Drawing.Size(845, 398);
             this.cogToolBlockEditV21.SuspendElectricRuns = false;
             this.cogToolBlockEditV21.TabIndex = 2;
             // 
@@ -158,9 +108,9 @@
             // 
             this.panelResult.Controls.Add(this.tabControlResult);
             this.panelResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelResult.Location = new System.Drawing.Point(1080, 3);
+            this.panelResult.Location = new System.Drawing.Point(854, 3);
             this.panelResult.Name = "panelResult";
-            this.panelResult.Size = new System.Drawing.Size(1, 366);
+            this.panelResult.Size = new System.Drawing.Size(1, 398);
             this.panelResult.TabIndex = 3;
             // 
             // tabControlResult
@@ -169,47 +119,19 @@
             this.tabControlResult.Location = new System.Drawing.Point(0, 0);
             this.tabControlResult.Name = "tabControlResult";
             this.tabControlResult.SelectedIndex = 0;
-            this.tabControlResult.Size = new System.Drawing.Size(1, 366);
+            this.tabControlResult.Size = new System.Drawing.Size(1, 398);
             this.tabControlResult.TabIndex = 0;
             // 
-            // btnSelectBarcodeImage
-            // 
-            this.btnSelectBarcodeImage.Location = new System.Drawing.Point(497, 43);
-            this.btnSelectBarcodeImage.Name = "btnSelectBarcodeImage";
-            this.btnSelectBarcodeImage.Size = new System.Drawing.Size(93, 23);
-            this.btnSelectBarcodeImage.TabIndex = 8;
-            this.btnSelectBarcodeImage.Text = "选择图像";
-            this.btnSelectBarcodeImage.UseVisualStyleBackColor = true;
-            this.btnSelectBarcodeImage.Click += new System.EventHandler(this.btnSelectBarcodeImage_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 46);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 12);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "条码图像路径:";
-            // 
-            // txtBarcodeImagePath
-            // 
-            this.txtBarcodeImagePath.Location = new System.Drawing.Point(110, 43);
-            this.txtBarcodeImagePath.Name = "txtBarcodeImagePath";
-            this.txtBarcodeImagePath.Size = new System.Drawing.Size(381, 21);
-            this.txtBarcodeImagePath.TabIndex = 6;
-            // 
-            // ToolBlockEditForm
+            // CalcToolBlockEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1083, 478);
+            this.ClientSize = new System.Drawing.Size(857, 460);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "ToolBlockEditForm";
-            this.Text = "编辑 ToolBlock";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBlockEditForm_FormClosing);
+            this.Name = "CalcToolBlockEditForm";
+            this.Text = "CalcToolBlockEditForm";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cogToolBlockEditV21)).EndInit();
             this.panelResult.ResumeLayout(false);
@@ -221,17 +143,10 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtPolarityImagePath;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private Cognex.VisionPro.ToolBlock.CogToolBlockEditV2 cogToolBlockEditV21;
         private System.Windows.Forms.Panel panelResult;
         private System.Windows.Forms.TabControl tabControlResult;
-        private System.Windows.Forms.Button btnSelectPolarityImage;
-        private System.Windows.Forms.Button btnExecute;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnSelectBarcodeImage;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtBarcodeImagePath;
     }
 }

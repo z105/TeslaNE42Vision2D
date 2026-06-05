@@ -16,33 +16,130 @@ using TeslaNE42Vision2D.Utils;
 
 namespace TeslaNE42Vision2D.Services
 {
-
+    /// <summary>
+    /// 状态机状态枚举
+    /// 定义软件运行过程中的各种状态，采用状态机模式确保流程有序执行
+    /// </summary>
     public enum MachineState
     {
+        /// <summary>
+        /// 预运行状态 - 软件启动后的初始状态，等待配方准备
+        /// 在此状态下可进行配方准备、暂停或进入错误状态
+        /// </summary>
         Preoperational,
+
+        /// <summary>
+        /// 错误状态 - 发生异常时进入此状态，需要复位才能恢复
+        /// 所有操作在此状态下被阻塞，需人工介入处理
+        /// </summary>
         Error,
+
+        /// <summary>
+        /// 暂停状态 - 软件被手动暂停后的状态
+        /// 可通过复位操作回到预运行状态继续工作
+        /// </summary>
         Halted,
+
+        /// <summary>
+        /// 运行就绪状态 - 配方已准备完成，可执行检测任务
+        /// 包含 Ready、SingleExecution、ContinuousExecution 三个子状态
+        /// </summary>
         Operational,
+
+        /// <summary>
+        /// 就绪子状态 - 等待触发单步或连续执行
+        /// 在 Operational 状态下的初始子状态，可接受外部触发信号
+        /// </summary>
         Ready = 5,
+
+        /// <summary>
+        /// 单步执行子状态 - 执行一次检测后自动返回就绪状态
+        /// 用于手动模式下的单次检测操作
+        /// </summary>
         SingleExecution,
+
+        /// <summary>
+        /// 连续执行子状态 - 循环执行检测直到收到停止/中止信号
+        /// 用于自动模式下的连续检测流程
+        /// </summary>
         ContinuousExecution,
     }
 
-
+    /// <summary>
+    /// 状态机事件枚举
+    /// 定义触发状态转换的各种事件，对应软件操作和外部信号
+    /// </summary>
     public enum StateEvent
     {
+        /// <summary>
+        /// 准备配方事件 - 从预运行状态进入运行就绪状态
+        /// 触发条件：配方文件加载成功，相机连接正常
+        /// </summary>
         PrepareRecipe,
+
+        /// <summary>
+        /// 取消准备配方事件 - 从运行就绪状态返回预运行状态
+        /// 触发条件：卸载配方、关闭相机连接
+        /// </summary>
         UnprepareRecipe,
+
+        /// <summary>
+        /// 开始单步执行事件 - 从就绪状态进入单步执行状态
+        /// 用于手动触发一次检测流程
+        /// </summary>
         StartSingleJob,
+
+        /// <summary>
+        /// 开始连续执行事件 - 从就绪状态进入连续执行状态
+        /// 用于自动模式下持续接收PLC触发信号执行检测
+        /// </summary>
         StartContinuous,
+
+        /// <summary>
+        /// 暂停事件 - 从预运行或运行就绪状态进入暂停状态
+        /// 触发条件：用户手动暂停或系统需要临时中断
+        /// </summary>
         Halt,
+
+        /// <summary>
+        /// 复位事件 - 从错误或暂停状态返回预运行状态
+        /// 同时清空统计数据，重置软件状态
+        /// </summary>
         Reset,
+
+        /// <summary>
+        /// 停止事件 - 从执行状态返回就绪状态
+        /// 正常结束当前检测任务
+        /// </summary>
         Stop,
+
+        /// <summary>
+        /// 中止事件 - 从执行状态紧急返回就绪状态
+        /// 异常情况下立即中断当前检测任务
+        /// </summary>
         Abort,
+
+        /// <summary>
+        /// 错误事件 - 从任意状态进入错误状态
+        /// 记录错误信息，等待人工处理
+        /// </summary>
         Error,
     }
 
-
+    /// <summary>
+    /// 应用状态机类
+    /// 使用 Stateless 库实现状态机，管理软件运行流程
+    ///
+    /// 状态机架构说明：
+    /// - 主状态：Preoperational(预运行) → Operational(运行就绪) → Error/Halted(错误/暂停)
+    /// - 子状态：Operational 包含 Ready(就绪)、SingleExecution(单步执行)、ContinuousExecution(连续执行)
+    /// - 状态转换通过事件触发，确保流程有序执行
+    ///
+    /// 线程安全说明：
+    /// - 状态转换采用异步方式(_machine.FireAsync)，避免阻塞主线程
+    /// - 统计计数使用 Interlocked 操作，保证多线程环境下数据一致性
+    /// - 连续执行使用 CancellationToken 控制取消，安全终止任务
+    /// </summary>
     public class AppStateMachine
     {
         /// <summary>
@@ -517,12 +614,13 @@ namespace TeslaNE42Vision2D.Services
                     cameraList = RunDataService.Instance.AppConfigService.Config.Cameras;
                 }
 
-
+                string timeStamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 foreach (var camera in cameraList)
                 {
                     
                     var cameraConfig = RunDataService.Instance.AppConfigService.Config.Cameras.FirstOrDefault(x => x.Name == camera.Name);
                     SnapAndInspectionInput input = new SnapAndInspectionInput();
+                    input.TimeStamp = timeStamp;
                     input.CameraName = camera.Name;
                     input.CameraIndex = cameraConfig.Index;
                     input.CameraService = Cameras.FirstOrDefault(x => x.Name == camera.Name);
@@ -531,7 +629,8 @@ namespace TeslaNE42Vision2D.Services
                     inputs.Add(input);
                 }
 
-
+     
+                
                 // 为每个输入创建一个任务
                 var tasks = inputs.Select(input => Task.Run(() => SnapAndDetect(input)));
 
@@ -543,7 +642,7 @@ namespace TeslaNE42Vision2D.Services
                 result.InspectionOutputs = inspectionOutputs;
 
                 SetInputs(RunDataService.Instance.CalcToolBlock, positionType, inspectionOutputs);
-                RunDataService.Instance.CalcToolBlock.Inputs["PosNum"].Value = (int)doubleParameters[0];
+                RunDataService.Instance.CalcToolBlock.Inputs["PosNum"].Value = (int)positionType;
                 RunDataService.Instance.CalcToolBlock.Run();
 
                 double physicalX = 0, physicalY = 0, physicalAngle = 0;
@@ -557,6 +656,10 @@ namespace TeslaNE42Vision2D.Services
 
 
                 bool inspOk = resultCode == 1 ? true : false;
+                if(inspectionOutputs.All(x =>x.OkNg) == false)
+                {
+                    inspOk = false;
+                }
 
                 //  更新统计计数 
 
@@ -596,13 +699,17 @@ namespace TeslaNE42Vision2D.Services
                 // 通过事件通知主界面更新检测结果和图像显示
                 OnDetectResultEvent?.Invoke(result);
                 LogResult(result);
-                RunDataService.Instance.ClientDevice.SendDetectResult(result);
+                
+                RunDataService.Instance.ClientDevice.SendDetectResult(result, positionType);
                 WriteLog($"检测完成: {(inspOk ? "OK" : "NG")} | X={result.PhysicalX:F3} Y={result.PhysicalY:F3} Angle={result.PhysicalAngle:F3} Result={resultCode}");
 
                  //RunDataService.Instance.ClientDevice.SendDetectResult(result);
             }
             catch (Exception ex)
             {
+                // 发送错误给PLC
+                RunDataService.Instance.ClientDevice.SendError(ex.Message);
+
                 // 异常处理：记录日志并触发错误状态
                 LogHelper.Error("检测执行异常", ex);
                 WriteLog($"检测异常: {ex.Message}");
@@ -740,16 +847,16 @@ namespace TeslaNE42Vision2D.Services
 
         }
 
-        private string GetImagePath(string camera, string type)
+        private string GetImagePath(string groupName, string type, string camera)
         {
             string today = DateTime.Now.ToString("yyyyMMdd");
             string dir = RunDataService.Instance.AppConfigService.Config.ImageSavePath;
-            string fullDir = Path.Combine(dir, today, type, camera);
+            string fullDir = Path.Combine(dir, today, groupName, type);
             if(Directory.Exists(fullDir) == false)
             {
                 Directory.CreateDirectory(fullDir);
             }
-            string name = $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}_{Guid.NewGuid().ToString().Replace("-", "")}.png";
+            string name = $"{camera}_{DateTime.Now.ToString("yyyyMMddHHmmssfff")}_{Guid.NewGuid().ToString().Replace("-", "")}.png";
             
             return Path.Combine(fullDir, name) ;
         }

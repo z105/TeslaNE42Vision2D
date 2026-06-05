@@ -59,7 +59,7 @@ namespace TeslaNE42Vision2D.Views
                 if (openFileDlg.ShowDialog() == DialogResult.OK)
                 {
                     //cogToolBlockEditV21.LoadImage(openFileDlg.FileName);
-                    txtImagePath.Text = openFileDlg.FileName;
+                    txtPolarityImagePath.Text = openFileDlg.FileName;
                 }
             }
             catch (Exception ex)
@@ -70,24 +70,29 @@ namespace TeslaNE42Vision2D.Views
 
         private void btnExecute_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtImagePath.Text))
+            if (string.IsNullOrEmpty(txtPolarityImagePath.Text))
             {
                 MessageBox.Show("请选择图片！");
                 return;
             }
             try
             {
-                CogImageFileTool cogImageFileTool = new CogImageFileTool();
-                cogImageFileTool.Operator.Open(txtImagePath.Text, CogImageFileModeConstants.Read);
+                //CogImageFileTool cogImageFileTool = new CogImageFileTool();
+                //cogImageFileTool.Operator.Open(txtPolarityImagePath.Text, CogImageFileModeConstants.Read);
 
-                cogImageFileTool.Run();
-                ICogImage cogImage = cogImageFileTool.OutputImage;
+                //cogImageFileTool.Run();
+                //ICogImage cogImage = cogImageFileTool.OutputImage;
+
+                ICogImage barcodeImage = new CogImage8Grey(new Bitmap(txtBarcodeImagePath.Text));
+                ICogImage polarityImage = new CogImage8Grey(new Bitmap(txtPolarityImagePath.Text));
 
                 if (cogToolBlock == null)
                 {
                     return;
                 }
 
+                this.cogToolBlock.Inputs["ImageBarcode"].Value = barcodeImage;
+                this.cogToolBlock.Inputs["ImagePolarity"].Value = polarityImage;
                 this.cogToolBlock.Run();
 
 
@@ -109,6 +114,24 @@ namespace TeslaNE42Vision2D.Views
             catch (Exception ex)
             {
                 MessageBox.Show("保存失败！" + ex.Message);
+            }
+        }
+
+        private void btnSelectBarcodeImage_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDlg = new OpenFileDialog();
+                openFileDlg.Filter = "图片文件|*.png;";
+                if (openFileDlg.ShowDialog() == DialogResult.OK)
+                {
+                    //cogToolBlockEditV21.LoadImage(openFileDlg.FileName);
+                    txtBarcodeImagePath.Text = openFileDlg.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("操作失败！" + ex.Message);
             }
         }
     }
