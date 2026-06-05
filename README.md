@@ -6,7 +6,7 @@
 
 - **多相机并发采集** — 支持多台 GigE Vision 相机同时触发，按 PLC 指令选择左/右/全部工位
 - **VisionPro ToolBlock 视觉分析** — 条码读取、极性识别、坐标定位
-- **九点标定** — 像素坐标到物理坐标的精确转换，参数持久化
+- **九点标定** — 像素坐标到物理坐标的转换
 - **PLC 通信** — TCP 协议，支持心跳、命令应答、结果上报
 - **状态机驱动** — Stateless 有限状态机管理完整生命周期
 - **数据存储** — FreeSql + SQLite 本地存储检测记录
@@ -43,7 +43,6 @@
 | `GoToState:Preoperational` | 复位 |
 | `GoToState:Ready` | 准备 |
 | `GoToState:SingleExecution` | 单次检测（`stringParams[2]`: `"10"`=左, `"01"`=右, `"11"`=全部） |
-| `GoToState:ContinuousExecution` | 连续检测 |
 | `GoToState:Halt` | 暂停 |
 | `SetJobId:{id}` | 设置工位 ID |
 
